@@ -1,12 +1,13 @@
-import { Link } from "react-router-dom"
+import Footer from "../Footer"
 
-function Home() {
-    return (
-        <>
-            <Link to="/fake-os">Fake OS</Link>
-            <Link to="/complicated-form">Complicated form</Link>
-        </>
-    )
+function App() {
+  return (
+    <div className="app">
+      {/* ton desktop ici */}
+
+      <Footer />
+    </div>
+  );
 }
 
-export default Home
+export default App;
