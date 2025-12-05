@@ -1,5 +1,5 @@
 import { useEffect, useState, type FC } from "react";
-import { FiSearch, FiWifi, FiBluetooth, FiSquare } from "react-icons/fi";
+import { FiSearch, FiWifi, FiBluetooth, FiSquare, FiBattery, FiSettings } from "react-icons/fi";
 
 interface DockApp {
     id : string;
@@ -18,8 +18,11 @@ const Footer: FC = () => {
         }
     ]);
 
-    const [showWifiMenu, setShowWifiMenu] = useState(false);
-    const [showBluetoothMenu, setShowBluetoothMenu] = useState(false);
+    const [showStatusMenu, setShowStatusMenu] = useState(false);
+    const [isWifiOn, setIsWifiOn] = useState(true);
+    const [isBluetoothOn, setIsBluetoothOn] = useState(false);
+    const [batteryLevel] = useState(78);
+    const [showLauncher, setShowLauncher] = useState(false); // État pour le lanceur
     
     useEffect(() => {
         const handleMouseMove = (e: MouseEvent) => {
@@ -50,33 +53,77 @@ const Footer: FC = () => {
     };
     
     return (
-        <div 
-            style={{
-                position: "fixed",
-                bottom: 0,
-                left: 0,
-                width: "100%",
-                height: "80px",
-                backgroundColor: "rgba(255, 255, 255, 0.1)", 
-                backdropFilter: "blur(10px)", 
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-                padding: "0 40px",
-                borderTop: "1px solid rgba(255, 255, 255, 0.5)",
-            }}
-        >
-            <div style={{ display: "flex", alignItems: "center", gap : "12px" }}>
-                    <div
-                        style= {{
-                            width: "130px",
-                            height: "16px",
-                            borderRadius: "20px",
-                            background: "#ddd"
+        <div style={{ position: "fixed", bottom: 0, left: 0, width: "100%", zIndex: 99 }}>
+            
+            {showLauncher && (
+                <div
+                    style={{
+                        position: "absolute",
+                        bottom: "80px", 
+                        left: "40px", 
+                        width: "350px", 
+                        height: "400px", 
+                        background: "white",
+                        borderRadius: "10px",
+                        boxShadow: "0 6px 20px rgba(0,0,0,0.4)",
+                        padding: "20px",
+                        zIndex: 100, 
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "center",
+                    }}
+                >
+                    <input 
+                        type="text"
+                        placeholder="Rechercher des applications, des fichiers..."
+                        style={{
+                            width: "90%",
+                            padding: "10px",
+                            marginBottom: "15px",
+                            borderRadius: "6px",
+                            border: "1px solid #ccc",
+                            fontSize: "16px",
                         }}
                     />
-                    <FiSearch size={22} color="black" />
+                    <p style={{ margin: 0, color: "#555" }}>Résultats récents / Applications</p>
                 </div>
+            )}
+            
+            <div 
+                style={{
+                    width: "100%",
+                    height: "80px",
+                    backgroundColor: "rgba(255, 255, 255, 0.1)", 
+                    backdropFilter: "blur(10px)", 
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    padding: "0 40px",
+                    borderTop: "1px solid rgba(255, 255, 255, 0.5)",
+                }}
+            >   
+                <div 
+                    style={{ 
+                        display: "flex", 
+                        alignItems: "center", 
+                        gap : "12px",
+                        cursor: "pointer",
+                        backgroundColor: "rgba(255, 255, 255, 0.4)",
+                        padding: "8px 12px",
+                        borderRadius: "20px",
+                        border: "1px solid transparent",
+                    }}
+                    onClick={() => {
+                        setShowLauncher(!showLauncher);
+                        setShowStatusMenu(false); 
+                    }}
+                >
+                    <div style={{ color: "black", opacity: 0.7, minWidth: "120px" }}>
+                        Rechercher...
+                    </div>
+                    <FiSearch size={22} color="black" style={{ opacity: 0.7 }} />
+                </div>
+
             <div 
                 style={{
                     display: "flex",
@@ -125,57 +172,89 @@ const Footer: FC = () => {
                 ))}
             </div>
             
-            <div style={{ display: "flex", alignItems: "center", gap : "20px" }}>
-
-                <div style={{ position: "relative" }}>
-                    <FiWifi 
-                        size={24}
-                        color="black"
-                        onClick={() => setShowWifiMenu((prev) => !prev)}
-                        style={{ cursor: "pointer" }}
-                    />
-                    {showWifiMenu && (
-                        <div
-                            style={{
-                                position: "absolute",
-                                bottom: "40px",
-                                right: 0,
-                                background: "white",
-                                padding: "10px 15px",
-                                borderRadius: "6px",
-                                boxShadow: "0 4px 12px rgba(0,0,0,0.2)",
-                            }}
-                        >
-                            <p style={{ margin: 0 }}>Wi-Fi</p>
-                            <button>Activer/Desactiver</button>
-                        </div>
-                    )}
+            <div 
+                style={{ 
+                    display: "flex", 
+                    alignItems: "center", 
+                    gap: "25px", 
+                    position: "relative",
+                }}
+            >
+                <FiWifi 
+                    size={22} 
+                    color={isWifiOn ? "black" : "gray"}
+                    style={{ cursor: "pointer" }}
+                />
+                <FiBluetooth 
+                    size={22} 
+                    color={isBluetoothOn ? "black" : "gray"}
+                    style={{ cursor: "pointer" }}
+                />
+                
+                <div 
+                    onClick={() => setShowStatusMenu((prev) => !prev)}
+                    style={{ 
+                        display: "flex", 
+                        alignItems: "center", 
+                        gap: "4px", 
+                        fontSize: "14px", 
+                        fontWeight: "500",
+                        cursor: "pointer",
+                        paddingBottom: "1px", 
+                    }}
+                >
+                    <FiBattery size={20} color="black" /> 
+                    <span style={{ color: "black", marginRight: "4px" }}>{batteryLevel}%</span>
                 </div>
 
-                <div style={{ position: "relative" }}>
-                    <FiBluetooth 
-                        size={24}
-                        color="black"
-                        onClick={() => setShowBluetoothMenu((prev) => !prev)}
-                        style={{ cursor: "pointer" }}
-                    />  
-                    {showBluetoothMenu && (
-                        <div
-                            style={{
-                                position: "absolute",
-                                bottom: "40px",
-                                right: 0,
-                                background: "white",
-                                padding: "10px 15px",
-                                borderRadius: "6px",
-                                boxShadow: "0 4px 12px rgba(0,0,0,0.2)",
-                            }}
-                        >
-                            <p style={{ margin: 0 }}>Bluetooth</p>
-                            <button>Activer/Desactiver</button>
+                <FiSettings 
+                    size={22} 
+                    color="black"
+                    onClick={() => {
+                        setShowStatusMenu((prev) => !prev);
+                        setShowLauncher(false); 
+                    }}
+                    style={{ cursor: "pointer", opacity: 0.8 }}
+                />
+
+                {showStatusMenu && (
+                    <div
+                        style={{
+                            position: "absolute",
+                            bottom: "90px", 
+                            right: 0,
+                            background: "white",
+                            padding: "15px",
+                            borderRadius: "10px",
+                            boxShadow: "0 4px 15px rgba(0,0,0,0.3)",
+                            width: "250px",
+                            zIndex: 100, 
+                        }}
+                    >
+                        <h4 style={{ margin: "0 0 10px 0", fontSize: "16px", borderBottom: "1px solid #eee", paddingBottom: "10px" }}>Paramètres Rapides</h4>
+                        
+                        {/* Contrôle Wi-Fi */}
+                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "10px" }}>
+                            <span>Wi-Fi (MonRéseau)</span>
+                            <button onClick={() => setIsWifiOn(!isWifiOn)} style={{ padding: "5px 10px", background: isWifiOn ? "#4CAF50" : "#f44336", color: "white", border: "none", borderRadius: "4px" }}>
+                                {isWifiOn ? "Activé" : "Désactivé"}
+                            </button>
                         </div>
-                    )}
-                </div>
+
+                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "10px" }}>
+                            <span>Bluetooth</span>
+                            <button onClick={() => setIsBluetoothOn(!isBluetoothOn)} style={{ padding: "5px 10px", background: isBluetoothOn ? "#4CAF50" : "#f44336", color: "white", border: "none", borderRadius: "4px" }}>
+                                {isBluetoothOn ? "Activé" : "Désactivé"}
+                            </button>
+                        </div>
+
+                        <div style={{ marginTop: "10px", paddingTop: "10px", borderTop: "1px solid #eee", display: "flex", alignItems: "center" }}>
+                            <FiBattery size={20} style={{ marginRight: "8px" }}/>
+                            <span>Batterie: **{batteryLevel}%**</span>
+                        </div>
+                    </div>
+                )}
+            </div>
             </div>
         </div>
     );
