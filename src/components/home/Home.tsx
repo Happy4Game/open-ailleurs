@@ -1,5 +1,3 @@
-
-
 import { Link } from "react-router-dom";
 import { FiMonitor, FiFileText, FiArrowRight } from "react-icons/fi";
 

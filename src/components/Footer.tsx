@@ -24,8 +24,8 @@ const Footer: FC = () => {
     const [isWifiOn, setIsWifiOn] = useState(true);
     const [isBluetoothOn, setIsBluetoothOn] = useState(false);
     const [batteryLevel] = useState(78);
-    const [showLauncher, setShowLauncher] = useState(false);
-
+    const [showLauncher, setShowLauncher] = useState(false); // État pour le lanceur
+    
     useEffect(() => {
         const handleMouseMove = (e: MouseEvent) => {
             setMouseX(e.clientX);
