@@ -2,6 +2,7 @@ import { useState } from 'react';
 import './FakeOs.css';
 import linux from '../../assets/linux.png';
 import libreoffice from '../../assets/appLogos/libreoffice.png';
+import libreofficePage from '../../assets/fakepage/libreoffice_page.png';
 import scratch from '../../assets/appLogos/scratch.png';
 import qrprint from '../../assets/appLogos/QRPrint.png';
 import blender from '../../assets/appLogos/blender.png';
@@ -16,7 +17,7 @@ import FakeWindow from './FakeWindow';
 interface AppConfig {
     id: string;
     title: string;
-    url: string;
+    url?: string;
     isOpen: boolean;
     zIndex: number;
 }
@@ -47,7 +48,7 @@ function FakeOS() {
         {
             id: "libreoffice",
             title: "LibreOffice",
-            url: "https://www.libreoffice.org/",
+            url: undefined,
             isOpen: false,
             zIndex: 7,
         },
@@ -82,6 +83,7 @@ function FakeOS() {
     ]);
 
     const [maxZIndex, setMaxZIndex] = useState(11);
+    const [libreText, setLibreText] = useState('');
 
     const handleAppClick = (appId: string) => {
         setMaxZIndex(prev => prev + 1);
@@ -137,19 +139,62 @@ function FakeOS() {
                 
                 {apps.map((app, index) => 
                     app.isOpen && (
-                        <FakeWindow
-                            key={app.id}
-                            id={app.id}
-                            title={app.title}
-                            url={app.url}
-                            initialWidth={800}
-                            initialHeight={600}
-                            initialTop={getInitialPosition(index).top}
-                            initialLeft={getInitialPosition(index).left}
-                            onClose={handleCloseWindow}
-                            onFocus={handleFocusWindow}
-                            zIndex={app.zIndex}
-                        />
+                       
+                        app.id === 'libreoffice' ? (
+                            <FakeWindow
+                                key={app.id}
+                                id={app.id}
+                                title={app.title}
+                                initialWidth={800}
+                                initialHeight={600}
+                                initialTop={getInitialPosition(index).top}
+                                initialLeft={getInitialPosition(index).left}
+                                onClose={handleCloseWindow}
+                                onFocus={handleFocusWindow}
+                                zIndex={app.zIndex}
+                            >
+                                {/* contenu: image de page + textarea 'caché' */}
+                                <div style={{ position: 'relative', width: '100%', height: '100%' }}>
+                                    <img src={libreofficePage} alt="LibreOffice page" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                    
+                                    <textarea
+                                        value={libreText}
+                                        onChange={(e) => setLibreText(e.target.value)}
+                                        placeholder="Commencez à écrire..."
+                                        style={{
+                                            position: 'absolute',
+                                            top: '170px',
+                                            left: '150px',
+                                            width: 'calc(100% - 350px)',
+                                            height: 'calc(100% - 150px)',
+                                            background: 'transparent',
+                                            border: 'none',
+                                            outline: 'none',
+                                            resize: 'none',
+                                            color: 'rgba(0,0,0,0.95)',
+                                            fontSize: 16,
+                                            fontFamily: 'serif',
+                                            lineHeight: 1.5,
+                                            
+                                        }}
+                                    />
+                                </div>
+                            </FakeWindow>
+                        ) : (
+                            <FakeWindow
+                                key={app.id}
+                                id={app.id}
+                                title={app.title}
+                                url={app.url}
+                                initialWidth={800}
+                                initialHeight={600}
+                                initialTop={getInitialPosition(index).top}
+                                initialLeft={getInitialPosition(index).left}
+                                onClose={handleCloseWindow}
+                                onFocus={handleFocusWindow}
+                                zIndex={app.zIndex}
+                            />
+                        )
                     )
                 )}
                 
