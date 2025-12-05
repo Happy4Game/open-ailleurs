@@ -4,6 +4,8 @@ import { stepsMonde1 } from './mondes/stepsMonde1';
 import { stepsMonde2 } from './mondes/stepsMonde2';
 import { stepsMonde3 } from './mondes/stepsMonde3';
 import { appLinks } from './appLinks';
+import AnimationFirst from './animations/AnimationFirst';
+import AnimationSecond from './animations/AnimationSecond';
 
 type ComplicatedFormProps = {
     onValider?: ValiderFunction;
@@ -84,18 +86,26 @@ export const ComplicatedForm = ({ onValider }: ComplicatedFormProps) => {
 
     return (
         <div className="adaptive-form">
-            <h2>{currentStep.question}</h2>
-            <div className="choices">
-                {currentStep.choices.map((c) => (
-                    <button
-                        key={c.label}
-                        onClick={() => handleChoice(c)}
-                        className="choice-button"
-                    >
-                        {c.label}
-                    </button>
-                ))}
-            </div>
+            {currentStepId != null && currentStep.choices.length == 3 ?
+                (Math.random() < 0.5 ? 
+                    <AnimationSecond key={currentStepId} question={currentStep.question} choices={currentStep.choices} handle_choice={handleChoice}></AnimationSecond> : 
+                    <AnimationFirst key={currentStepId} question={currentStep.question} choices={currentStep.choices} handle_choice={handleChoice}></AnimationFirst>
+                ) :
+                <>
+                    <h2>{currentStep.question}</h2>
+                    <div className="choices">
+                        {currentStep.choices.map((c) => (
+                            <button
+                                key={c.label}
+                                onClick={() => handleChoice(c)}
+                                className="choice-button"
+                            >
+                                {c.label}
+                            </button>
+                        ))}
+                    </div>
+                </>
+            }
         </div>
     );
 };
