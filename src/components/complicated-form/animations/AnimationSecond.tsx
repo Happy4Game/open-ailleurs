@@ -55,7 +55,7 @@ function AnimationSecond({ question, choices, handle_choice } : Props) {
                     [scope_ball.current, { x: 365, y: 350, rotate: 0 }, { duration: .5 }],
                     [scope_ball.current, { x: 365, y: 800, rotate: 0 }, { duration: 2 }],
                 ])
-                handle_choice(choices[1])
+                handle_choice(choices[2])
             }
         }
 
