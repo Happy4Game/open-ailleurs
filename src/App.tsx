@@ -6,13 +6,13 @@ import FakeOS from './components/fake-os/FakeOS'
 
 function App() {
     return (
-        <>
+        <div className='w-screen'>
             <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/fake-os" element={<FakeOS />} />
                 <Route path="/complicated-form" element={<ComplicatedForm />} />
             </Routes>
-        </>
+        </div>
     )
 }
 
