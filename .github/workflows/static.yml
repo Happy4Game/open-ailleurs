@@ -1,10 +1,12 @@
 name: Deploy static content to Pages
 
+# Triggers: push to master/develop (adjust as needed) and manual dispatch
 on:
   push:
-    branches: ["master"]
+    branches: ["master", "develop"]
   workflow_dispatch:
 
+# Permissions needed to publish to Pages
 permissions:
   contents: read
   pages: write
@@ -16,35 +18,64 @@ concurrency:
 
 jobs:
   build:
+    name: Build site
     runs-on: ubuntu-latest
+    # single Node version to keep things simple and avoid artifact duplication
     strategy:
       matrix:
         node-version: [22.x]
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
-      - run: npm ci
-      - run: npm run build --if-present
-      # Upload artifact only from one matrix job to avoid 409 conflict
-      - name: Upload Pages artifact (once)
-        if: matrix.node-version == '18.x'
+
+      - name: Install dependencies (with fallback)
+        # If `npm ci` fails (optional native deps bug), we fall back to cleaning and `npm i`.
+        run: |
+          set -e
+          echo "Running npm ci..."
+          if npm ci; then
+            echo "npm ci succeeded"
+          else
+            echo "npm ci failed — attempting recovery: remove lockfile & reinstall"
+            rm -rf node_modules package-lock.json
+            npm cache clean --force
+            npm i
+          fi
+
+      - name: Build
+        run: npm run build --if-present
+
+      - name: Verify dist exists
+        run: |
+          if [ ! -d "./dist" ]; then
+            echo "Error: ./dist not found after build"
+            ls -la
+            exit 1
+          fi
+
+      - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: './dist'
 
   deploy:
+    name: Deploy to GitHub Pages
     needs: build
     runs-on: ubuntu-latest
     environment:
       name: github-pages
+      # URL will be filled by the deploy step output
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - name: Setup Pages
         uses: actions/configure-pages@v5
+
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
