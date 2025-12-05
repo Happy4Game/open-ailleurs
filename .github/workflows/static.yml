@@ -30,29 +30,31 @@ jobs:
       - name: Install dependencies (robust for CI native modules)
         run: |
           set -e
-          echo "Preparing fresh install on runner to ensure Linux native binaries are present"
-          # Remove node_modules and lockfile to force platform-resolved install on the runner
           rm -rf node_modules package-lock.json || true
           npm cache clean --force || true
           npm i
-
-          # Try to rebuild native modules (best-effort). Some native packages expose
-          # prebuilt binaries; rebuilding can also trigger downloads or local builds.
           npm rebuild || true
-          # Rebuild lightningcss specifically if present
-          npm rebuild lightningcss || true
-
-          # As a targeted fallback, attempt to install known native runtimes (no-save),
-          # these installs are best-effort and won't fail the job if unavailable.
-          npm i @rollup/rollup-linux-x64-gnu --no-save || true
-          npm i @parcel/lightningcss-linux-x64-gnu --no-save || true
-
       - name: Build
         run: npm run build --if-present
+      - name: Validate ./dist (size, symlinks, hardlinks)
+        run: |
+          set -e
+          if [ ! -d ./dist ]; then echo "dist not found" && exit 1; fi
+          echo "dist size:" && du -sh ./dist
+          if [ -n "$(find ./dist -type l -print -quit)" ]; then
+            echo "ERROR: symlink(s) found in dist:" && find ./dist -type l -ls && exit 1
+          fi
+          if [ -n "$(find ./dist -type f -links +1 -print -quit)" ]; then
+            echo "ERROR: hard link(s) found in dist:" && find ./dist -type f -links +1 -ls && exit 1
+          fi
+          bytes=$(du -sb ./dist | cut -f1)
+          max=$((10*1024*1024*1024))
+          if [ "$bytes" -ge "$max" ]; then
+            echo "ERROR: dist is >= 10GB ($bytes bytes)" && exit 1
+          fi
       - name: Upload Pages artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-pages-artifact@v3
         with:
-          name: github-pages
           path: ./dist
 
   deploy:
