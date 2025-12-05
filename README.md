@@ -1,73 +1,68 @@
-# React + TypeScript + Vite
+# Open ailleurs — Plateforme NIRD (Numérique Inclusif, Responsable et Durable)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Open ailleurs est une application Web pédagogique et ludique conçue pour aider les établissements scolaires (élèves, enseignants, familles, collectivités) à réduire leurs dépendances numériques et à entrer progressivement dans la démarche NIRD. L'objectif est de rendre l'École plus autonome, résiliente et créative face aux écosystèmes fermés et aux dépendances des grandes plateformes.
 
-Currently, two official plugins are available:
+## Présentation du projet
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Face à la fin du support de systèmes propriétaires et à la multiplication des verrous (licences coûteuses, stockage hors UE, matériel rendu obsolète, abonnements indispensables), la démarche NIRD propose une alternative pratique : un Numérique Inclusif, Responsable et Durable. Open ailleurs illustre et facilite cette démarche en proposant des parcours, outils et ressources pour accompagner les équipes éducatives.
 
-## React Compiler
+L'application vise à :
+- Expliquer concrètement comment réduire les dépendances numériques d'un établissement.
+- Proposer des actions progressives, réalistes et mesurables.
+- Valoriser des solutions libres, respectueuses des données et durables.
+- Faire grandir une communauté contributive autour de la démarche NIRD.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Ce que propose l'application
 
-## Expanding the ESLint configuration
+- Un parcours interactif et scénarisé (mécaniques de choix, petits défis, énigmes pédagogiques).
+- Une interface ludique de type « faux poste de travail » pour simuler des usages et des alternatives.
+- Des démonstrations récréatives (ex. mini-jeu) pour capter l'attention et rendre l'apprentissage attractif.
+- Une bibliothèque de ressources et de liens vers des solutions libres et responsables.
+- Des formats modulaires permettant aux établissements de s'engager progressivement.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Fichiers et architecture (points d'entrée)
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+- Entrée de l'application : src/main.tsx
+- Composant principal : src/App.tsx
+- Parcours interactif : src/components/complicated-form/ComplicatedForm.tsx et les dossiers animations/ et mondes/
+- Faux OS (interface simulée) : src/components/fake-os/
+- Mini-jeu : src/components/snake/
+- Composants généraux : src/components/Header.tsx et src/components/Footer.tsx
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+## Installation et développement local
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+1. Installer les dépendances :
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+	npm install
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+2. Lancer le serveur de développement :
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+	npm run dev
+
+3. Construire pour la production :
+
+	npm run build
+
+Remarque : le fichier de configuration Vite peut définir un paramètre base si vous déployez sur un sous-chemin.
+
+## Déploiement
+
+Le site doit être mis en ligne pour l'évaluation finale. Vous pouvez utiliser un hébergeur de sites statiques (GitHub Pages, Netlify, Vercel, Surge, etc.). Vérifiez que toutes les ressources (images, polices) sont bien incluses et que les routes fonctionnent selon le paramètre `base` si nécessaire.
+
+## Licence et ressources
+
+Le projet est distribué sous licence libre (voir le fichier LICENSE). Toutes les ressources utilisées doivent être libres de droit.
+
+## Contribution
+
+- Pour ajouter ou modifier les étapes du parcours : modifier les fichiers du dossier src/components/complicated-form/mondes/
+- Pour ajouter des liens ou ressources : mettre à jour src/components/complicated-form/appLinks.ts
+- Pour ajouter des animations : créer un nouveau composant dans src/components/complicated-form/animations/ et l'importer dans le parcours
+
+## Bonnes pratiques pour la Nuit de l'Info
+
+- Assurez-vous que l'application est accessible en ligne avant la fin de la Nuit pour l'évaluation.
+- Utilisez uniquement des ressources libres de droit.
+- Documentez les contributions et indiquez clairement les auteurs dans le dépôt.
+
+Bonne Nuit de l'Info 2025 — amusez-vous en renforçant la résilience numérique des établissements !
