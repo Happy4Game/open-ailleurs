@@ -5,8 +5,15 @@ import ball from '../../../assets/ball.png';
 import plank from '../../../assets/planks.png';
 import { useAnimate } from 'framer-motion';
 import { motion } from "framer-motion"
+import type { Choice } from '../types';
 
-function AnimationSecond({ question, choices, handle_choice }) {
+type Props = {
+    question: string,
+    choices: Choice[],
+    handle_choice: (arg0: Choice) => void
+}
+
+function AnimationSecond({ question, choices, handle_choice } : Props) {
     document.body.style.overflow = 'hidden';
 
     let first_down = false;

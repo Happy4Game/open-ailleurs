@@ -5,8 +5,15 @@ import selector from '../../../assets/selector.png';
 import ball from '../../../assets/ball.png';
 import { useAnimate } from 'framer-motion';
 import { motion } from "framer-motion"
+import type { Choice } from '../types';
 
-function AnimationFirst({question, choices, handle_choice}) {
+type Props = {
+    question: string,
+    choices: Choice[],
+    handle_choice: (arg0: Choice) => void
+}
+
+function AnimationFirst({question, choices, handle_choice} : Props) {
     const [scope_ball, animate_ball] = useAnimate();
     let is_at_choice: boolean = false;
     const ball_sequence = async () => {
