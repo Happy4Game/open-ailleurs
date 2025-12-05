@@ -4,7 +4,7 @@ import { FiMinimize2, FiMaximize2, FiX } from "react-icons/fi";
 interface FakeWindowProps {
     id: string;
     title: string;
-    url: string;
+    url?: string;
     initialWidth: number;
     initialHeight: number;
     initialTop: number;
@@ -12,6 +12,7 @@ interface FakeWindowProps {
     onClose: (id: string) => void;
     onFocus: (id: string) => void;
     zIndex: number;
+    children?: React.ReactNode;
 }
 
 const FakeWindow: FC<FakeWindowProps> = ({
@@ -25,8 +26,8 @@ const FakeWindow: FC<FakeWindowProps> = ({
     onClose,
     onFocus,
     zIndex,
+    children,
 }) => {
-    
     const [position, setPosition] = useState({ top: initialTop, left: initialLeft });
     const [size] = useState({ width: initialWidth, height: initialHeight });
     const [isMaximized, setIsMaximized] = useState(false);
@@ -163,14 +164,21 @@ const FakeWindow: FC<FakeWindowProps> = ({
                 </div>
             </div>
 
+            {/* render children if fourni, sinon iframe (comportement précédent) */}
             <div style={{ flexGrow: 1, overflow: "hidden", padding: "10px" }}>
-                <iframe
-                    src={url}
-                    style={{ width: '100%', height: '100%', border: 'none' }}
-                    title={title}
-                    allowFullScreen
-                    sandbox="allow-same-origin allow-scripts allow-popups allow-forms"
-                />
+                {children ? (
+                    <div style={{ width: '800px', height: '600px' }}>
+                        {children}
+                    </div>
+                ) : (
+                    <iframe
+                        src={url}
+                        style={{ width: '100%', height: '100%', border: 'none' }}
+                        title={title}
+                        allowFullScreen
+                        sandbox="allow-same-origin allow-scripts allow-popups allow-forms"
+                    />
+                )}
             </div>
         </div>
     );
