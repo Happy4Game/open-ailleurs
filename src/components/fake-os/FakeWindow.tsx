@@ -95,7 +95,6 @@ const FakeWindow: FC<FakeWindowProps> = ({
             height: '100vh',
             borderRadius: 0,
             border: 'none', 
-            transition: 'width 0.3s, height 0.3s, top 0.3s, left 0.3s',
         }
         : {
             top: position.top,
@@ -118,10 +117,8 @@ const FakeWindow: FC<FakeWindowProps> = ({
                 flexDirection: "column",
                 overflow: "hidden",
                 zIndex: zIndex,
-                minWidth: isMaximized ? undefined : 300,
-                minHeight: isMaximized ? undefined : 200,
-                userSelect: isDragging.current ? 'none' : 'auto', 
-                cursor: isDragging.current ? 'grabbing' : 'auto',
+                minWidth: 300,
+                minHeight: 200,
             }}
             onMouseDown={() => onFocus(id)}
         >
@@ -136,7 +133,7 @@ const FakeWindow: FC<FakeWindowProps> = ({
                     backgroundColor: "#f0f0f0",
                     cursor: isMaximized ? 'default' : 'grab',
                     borderBottom: '1px solid #ccc',
-                    userSelect: 'none', 
+                    userSelect: 'none',
                 }}
             >
                 <span style={{ fontSize: "14px", fontWeight: "600" }}>
@@ -148,30 +145,31 @@ const FakeWindow: FC<FakeWindowProps> = ({
                         size={18} 
                         color="#777" 
                         style={{ cursor: "pointer" }}
-                        onClick={() => onClose(id)} 
+                        onClick={() => onClose(id)}
                     />
-                    <div onClick={toggleMaximize} style={{ display: 'flex' }}>
+                    <div onClick={toggleMaximize} style={{ display: 'flex', cursor: 'pointer' }}>
                         {isMaximized ? (
-                            <FiMinimize2 size={18} color="#777" style={{ cursor: "pointer" }} />
+                            <FiMinimize2 size={18} color="#777" />
                         ) : (
-                            <FiMaximize2 size={18} color="#777" style={{ cursor: "pointer" }} />
+                            <FiMaximize2 size={18} color="#777" />
                         )}
                     </div>
                     <FiX 
                         size={18} 
                         color="#d9534f"
                         style={{ cursor: "pointer" }}
-                        onClick={() => onClose(id)} 
+                        onClick={() => onClose(id)}
                     />
                 </div>
             </div>
 
-            <div style={{ flexGrow: 1, overflow: "hidden" }}>
+            <div style={{ flexGrow: 1, overflow: "hidden", padding: "10px" }}>
                 <iframe
                     src={url}
-                    style={{ width: '90%', height: '90%', border: 'none' }}
+                    style={{ width: '100%', height: '100%', border: 'none' }}
                     title={title}
                     allowFullScreen
+                    sandbox="allow-same-origin allow-scripts allow-popups allow-forms"
                 />
             </div>
         </div>
