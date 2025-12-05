@@ -1,0 +1,31 @@
+.fakeos-body {
+    width: 100vw;
+    height: 100vh;
+    background: #C9C9C9;
+    background: linear-gradient(180deg,rgba(201, 201, 201, 1) 0%, rgba(240, 200, 0, 1) 100%);
+}
+
+.linux-img{
+    width: 30vw;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.list-app-row {
+    position: relative;
+    padding-top: 10vh;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+}
+.list-app-row > div {
+    cursor: pointer;
+}
+.list-app-row > div > img {
+    width: 5vw;
+}
+.list-app-row > div > p {
+    margin: 0;
+}
