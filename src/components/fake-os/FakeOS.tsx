@@ -8,10 +8,13 @@ import vlc from '../../assets/appLogos/vlc.png'
 import git from '../../assets/appLogos/git.png'
 import geogebra from '../../assets/appLogos/geogebra.png'
 import stellarium from '../../assets/appLogos/stellarium.png'
+import Footer from '../Footer'
+import Header from '../Header'
 
 function FakeOS() {
     return (
         <>
+        <Header></Header>
             <div className='fakeos-body'>
                 <img className='linux-img' src={linux} alt="Image de fond" />
                 <div className='list-app-row'>
@@ -55,6 +58,7 @@ function FakeOS() {
                     </div>
                 </div>
             </div>
+            <Footer></Footer>
         </>
     )
 }
