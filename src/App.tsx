@@ -1,6 +1,6 @@
 import { Route, Routes } from 'react-router-dom'
 import './App.css'
-import ComplicatedForm from './components/complicated-form/ComplicatedForm'
+import {ComplicatedForm} from './components/complicated-form/ComplicatedForm'
 import Home from './components/home/Home'
 import FakeOS from './components/fake-os/FakeOS'
 
