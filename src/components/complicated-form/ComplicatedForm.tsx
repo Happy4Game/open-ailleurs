@@ -5,6 +5,9 @@ import { stepsMonde2 } from './mondes/stepsMonde2';
 import { stepsMonde3 } from './mondes/stepsMonde3';
 import { appLinks } from './appLinks';
 
+// 👉 On importe ton portail
+import { PortalIntention } from './PortalIntention';
+
 type ComplicatedFormProps = {
     onValider?: ValiderFunction;
 };
@@ -14,6 +17,9 @@ type Monde = 'Monde1' | 'Monde2' | 'Monde3';
 export const ComplicatedForm = ({ onValider }: ComplicatedFormProps) => {
     const [selectedMonde, setSelectedMonde] = useState<Monde | null>(null);
     const [currentStepId, setCurrentStepId] = useState<string | null>(null);
+
+    // 👉 Ajout : état pour ouvrir la page PortailIntention
+    const [showPortail, setShowPortail] = useState(false);
 
     const getSteps = (): Step[] => {
         switch (selectedMonde) {
@@ -31,7 +37,7 @@ export const ComplicatedForm = ({ onValider }: ComplicatedFormProps) => {
     const handleMondeSelect = (monde: Monde) => {
         setSelectedMonde(monde);
         const steps = getStepsForMonde(monde);
-        setCurrentStepId(steps[0].id); // première étape
+        setCurrentStepId(steps[0].id);
     };
 
     const getStepsForMonde = (monde: Monde): Step[] => {
@@ -48,7 +54,6 @@ export const ComplicatedForm = ({ onValider }: ComplicatedFormProps) => {
     const handleChoice = (choice: Choice) => {
         if (!currentStepId) return;
 
-        // Gestion liens vers site externe
         if (choice.nextStep.startsWith('LINK-')) {
             const appName = choice.nextStep.replace('LINK-', '');
             const url = appLinks[appName];
@@ -56,7 +61,6 @@ export const ComplicatedForm = ({ onValider }: ComplicatedFormProps) => {
             return;
         }
 
-        // Gestion retour au choix du monde
         if (choice.nextStep === 'RESET') {
             setSelectedMonde(null);
             setCurrentStepId(null);
@@ -67,13 +71,40 @@ export const ComplicatedForm = ({ onValider }: ComplicatedFormProps) => {
         if (choice.nextStep) setCurrentStepId(choice.nextStep);
     };
 
+    // -----------------------------------------------------
+    //          PAGE PORTAIL D’INTENTION
+    // -----------------------------------------------------
+    if (showPortail) {
+        return <PortalIntention />;
+    }
+
+    // -----------------------------------------------------
+    //    PAGE DE SÉLECTION DU MONDE + PORTAIL
+    // -----------------------------------------------------
     if (!selectedMonde) {
         return (
             <div className="monde-selection">
-                <h2>Choisissez votre monde :</h2>
-                <button onClick={() => handleMondeSelect('Monde1')}>Monde 1 : Archipel des Formes</button>
-                <button onClick={() => handleMondeSelect('Monde2')}>Monde 2 : Studio Dynamique</button>
-                <button onClick={() => handleMondeSelect('Monde3')}>Monde 3 : Cité Logique</button>
+                <h2>Point d’entrée du multivers :</h2>
+
+                {/* --- BOUTON PORTAIL D'INTENTION --- */}
+                <button
+                    onClick={() => setShowPortail(true)}
+                    className="portail-button"
+                >
+                    🔮 Ouvrir le Portail d’Intention
+                </button>
+
+                <h3>Ou choisir un monde :</h3>
+
+                <button onClick={() => handleMondeSelect('Monde1')}>
+                    Monde 1 : Archipel des Formes
+                </button>
+                <button onClick={() => handleMondeSelect('Monde2')}>
+                    Monde 2 : Studio Dynamique
+                </button>
+                <button onClick={() => handleMondeSelect('Monde3')}>
+                    Monde 3 : Cité Logique
+                </button>
             </div>
         );
     }
