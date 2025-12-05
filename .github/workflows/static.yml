@@ -27,20 +27,25 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
-      - name: Install dependencies (with fallback and Rollup native fix)
+      - name: Install dependencies (robust for CI native modules)
         run: |
           set -e
-          echo "Attempting npm ci..."
-          if npm ci; then
-            echo "npm ci succeeded"
-          else
-            echo "npm ci failed — attempting recovery: remove lockfile & reinstall"
-            rm -rf node_modules package-lock.json
-            npm cache clean --force
-            npm i
-          fi
-          # Ensure Rollup native runtime for Linux runner is present (workaround for npm optional deps bug)
+          echo "Preparing fresh install on runner to ensure Linux native binaries are present"
+          # Remove node_modules and lockfile to force platform-resolved install on the runner
+          rm -rf node_modules package-lock.json || true
+          npm cache clean --force || true
+          npm i
+
+          # Try to rebuild native modules (best-effort). Some native packages expose
+          # prebuilt binaries; rebuilding can also trigger downloads or local builds.
+          npm rebuild || true
+          # Rebuild lightningcss specifically if present
+          npm rebuild lightningcss || true
+
+          # As a targeted fallback, attempt to install known native runtimes (no-save),
+          # these installs are best-effort and won't fail the job if unavailable.
           npm i @rollup/rollup-linux-x64-gnu --no-save || true
+          npm i @parcel/lightningcss-linux-x64-gnu --no-save || true
 
       - name: Build
         run: npm run build --if-present
