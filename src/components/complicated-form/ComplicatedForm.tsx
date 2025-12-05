@@ -6,6 +6,7 @@ import { stepsMonde3 } from './mondes/stepsMonde3';
 import { appLinks } from './appLinks';
 import AnimationFirst from './animations/AnimationFirst';
 import AnimationSecond from './animations/AnimationSecond';
+import { Link } from 'react-router-dom';
 
 type ComplicatedFormProps = {
     onValider?: ValiderFunction;
@@ -16,6 +17,8 @@ type Monde = 'Monde1' | 'Monde2' | 'Monde3';
 export const ComplicatedForm = ({ onValider }: ComplicatedFormProps) => {
     const [selectedMonde, setSelectedMonde] = useState<Monde | null>(null);
     const [currentStepId, setCurrentStepId] = useState<string | null>(null);
+
+    const [boomCounter, setBoomCounter] = useState<number>(0);
 
     const getSteps = (): Step[] => {
         switch (selectedMonde) {
@@ -92,7 +95,8 @@ export const ComplicatedForm = ({ onValider }: ComplicatedFormProps) => {
                     <AnimationFirst key={currentStepId} question={currentStep.question} choices={currentStep.choices} handle_choice={handleChoice}></AnimationFirst>
                 ) :
                 <>
-                    <h2>{currentStep.question}</h2>
+                    <h2 onClick={() => currentStep.id === 'BOOM' ? setBoomCounter(boomCounter + 1) : console.log("ok")}>{currentStep.question}</h2>
+                    {boomCounter > 5 ? <Link to="/snake">Secret</Link> : null}
                     <div className="choices">
                         {currentStep.choices.map((c) => (
                             <button

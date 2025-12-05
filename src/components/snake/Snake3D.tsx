@@ -1,15 +1,11 @@
-import React, { useEffect, useRef, useState } from "react";
-import { Canvas, useFrame } from "@react-three/fiber";
+import { useEffect, useRef, useState, type JSX } from "react";
+import { Canvas } from "@react-three/fiber";
 import { OrbitControls, Html } from "@react-three/drei";
 
 type Vec3 = [number, number, number];
 
 const GRID_SIZE = 20; // playable grid is -GRID_SIZE..GRID_SIZE on x and z
 const TICK_MS = 120; // speed of the snake
-
-function clamp(v: number, a: number, b: number) {
-    return Math.max(a, Math.min(b, v));
-}
 
 function randomPos(exclude: Set<string>): Vec3 {
     // choose a random grid cell (y is 0.5 so cubes sit on ground)
@@ -24,16 +20,16 @@ function randomPos(exclude: Set<string>): Vec3 {
 function keyToDir(key: string): Vec3 | null {
     switch (key) {
         case "ArrowUp":
-        case "w":
-        case "W":
+        case "z":
+        case "Z":
             return [0, 0, -1];
         case "ArrowDown":
         case "s":
         case "S":
             return [0, 0, 1];
         case "ArrowLeft":
-        case "a":
-        case "A":
+        case "q":
+        case "Q":
             return [-1, 0, 0];
         case "ArrowRight":
         case "d":
@@ -142,7 +138,6 @@ export default function Snake3D(): JSX.Element {
         setSegments([[0, 0.5, 0], [-1, 0.5, 0], [-2, 0.5, 0]]);
         setDir([1, 0, 0]);
         setScore(0);
-        const exclude = new Set<string>([[0, 0, 0].map(String).join(",")] as any);
         setApple(randomPos(new Set(segmentsRef.current.map(posKey))));
         setRunning(true);
     }
@@ -203,10 +198,9 @@ export default function Snake3D(): JSX.Element {
     return (
         <div className="w-full h-screen bg-slate-900 text-white flex flex-col">
             <div className="p-3 flex items-center justify-between">
-                <div className="text-lg font-semibold">Snake 3D (TypeScript + r3f)</div>
                 <div className="flex gap-4 items-center">
                     <div>Score: <span className="font-bold">{score}</span></div>
-                    <div className="text-sm opacity-80">Arrow keys / WASD — Space to pause — R to restart</div>
+                    <div className="text-sm opacity-80">Fléches / ZQSD — Space: pause — R: restart</div>
                 </div>
             </div>
 
@@ -240,8 +234,6 @@ export default function Snake3D(): JSX.Element {
                     )}
                 </Canvas>
             </div>
-
-            <div className="p-2 text-xs opacity-80 text-center">Built with React + TypeScript + @react-three/fiber</div>
         </div>
     );
 }
